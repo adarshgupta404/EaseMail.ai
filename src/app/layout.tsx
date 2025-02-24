@@ -11,6 +11,7 @@ import {
 } from "@clerk/nextjs";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
+import Provider from "@/components/Provider";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -24,12 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body>
-          <TRPCReactProvider> {children} </TRPCReactProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body>
+        <ClerkProvider>
+          <TRPCReactProvider>
+            <Provider> {children}</Provider>{" "}
+          </TRPCReactProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

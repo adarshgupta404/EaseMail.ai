@@ -6,12 +6,16 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
-    typescript:{
-        ignoreBuildErrors:true
+    reactStrictMode: false, // Disables strict mode to reduce hydration mismatches
+    typescript: {
+        ignoreBuildErrors: true,
     },
-    eslint:{
-        ignoreDuringBuilds:true
-    }
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    experimental: {
+        reactRoot: "concurrent", // Helps with hydration in React 18+
+    },
 };
 
 export default config;
