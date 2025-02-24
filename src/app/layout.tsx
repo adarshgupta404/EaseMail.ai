@@ -12,6 +12,7 @@ import {
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
 import Provider from "@/components/Provider";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body>
         <ClerkProvider>
           <TRPCReactProvider>
-            <Provider> {children}</Provider>{" "}
+            <Provider>
+              <NextTopLoader /> {children}
+            </Provider>
           </TRPCReactProvider>
         </ClerkProvider>
       </body>

@@ -17,6 +17,7 @@ export const GET = async (req: NextRequest) => {
     const token = await getAurinkoToken(code as string)
     if (!token) return NextResponse.json({ error: "Failed to fetch token" }, { status: 400 });
     const accountDetails = await getAccountDetails(token.accessToken)
+    console.log(accountDetails)
     // await db.account.upsert({
     //     where: { id: token.accountId.toString() },
     //     create: {
