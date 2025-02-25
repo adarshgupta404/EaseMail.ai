@@ -19,7 +19,7 @@ export const SparklesCore = ({
   minSize = 0.6,
   maxSize = 1.4,
   particleDensity = 200,
-  className = "h-[calc(100dvh+310px)] w-full",
+  className = "h-full w-full",
   particleColor = "#FFFFFF",
 }: SparklesProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -140,15 +140,7 @@ export const SparklesCore = ({
     mousePosition.x,
     mousePosition.y,
   ]);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    
-    setDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-  }, []);
-  
+
   return (
     <canvas
       ref={canvasRef}
@@ -157,7 +149,7 @@ export const SparklesCore = ({
       style={{
         background,
         width: dimensions.width,
-        height: dimensions.height,
+        // height: dimensions.height,
       }}
     />
   );
