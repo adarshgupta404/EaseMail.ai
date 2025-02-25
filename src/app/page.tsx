@@ -1,24 +1,23 @@
-import Hero from "@/components/landing/hero"
-import Navbar from "@/components/landing/navbar"
-import Features from "@/components/landing/features"
-import Pricing from "@/components/landing/pricing"
-import Testimonials from "@/components/landing/testimonials"
-import FAQ from "@/components/landing/faq"
-import CTA from "@/components/landing/cta"
+import Hero from "@/components/landing/hero";
+import Navbar from "@/components/landing/navbar";
+import Features from "@/components/landing/features";
+import Pricing from "@/components/landing/pricing";
+import Testimonials from "@/components/landing/testimonials";
+import FAQ from "@/components/landing/faq";
+import CTA from "@/components/landing/cta";
+import { SparklesCore } from "@/components/landing/sparkles";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b font-mono from-gray-50 to-white">
+    <main className="min-h-screen font-mono bg-background">
       <Navbar />
       <Hero />
+     
       <Features />
       <Pricing />
       <Testimonials />
       <FAQ />
       <CTA />
     </main>
-  )
+  );
 }
-
-
-

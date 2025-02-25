@@ -6,24 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Navbar() {
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md"
+      className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-900 dark:bg-gray-900/80"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <Mail className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-semibold">EasyMail.ai</span>
+              <span className="text-xl font-bold">EasyMail.ai</span>
             </Link>
           </div>
 
-          <div className="hidden items-center space-x-8 md:flex">
+          <div className="hidden items-center space-x-8 text-primary md:flex">
             <NavLink href="#features">Features</NavLink>
             <NavLink href="#pricing">Pricing</NavLink>
             <NavLink href="#testimonials">Testimonials</NavLink>
@@ -31,10 +32,8 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">
-              <Link href={"/sign-in"}>Sign in</Link>
-            </Button>
-            <Button>Get Early Access</Button>
+            <ThemeToggle />
+            <Button variant="ghost">Log in</Button>
           </div>
         </div>
       </div>
@@ -50,11 +49,11 @@ function NavLink({
   children: React.ReactNode;
 }) {
   return (
-    <a
+    <Link
       href={href}
-      className="font-medium text-gray-600 transition-colors duration-200 hover:text-blue-600"
+      className="font-medium text-secondary-foreground transition-colors duration-200 dark:text-secondary-foreground"
     >
-      {children}
-    </a>
+      <button> {children}</button>
+    </Link>
   );
 }

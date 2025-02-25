@@ -23,7 +23,7 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="py-20 bg-gray-50">
+    <section id="testimonials" className="py-20 bg-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -32,8 +32,8 @@ export default function Testimonials() {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <h2 className="text-3xl font-bold text-gray-900">What Our Users Say</h2>
-          <p className="mt-4 text-lg text-gray-600">Join thousands of satisfied users</p>
+          <h2 className="text-3xl font-bold ">What Our Users Say</h2>
+          <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">Join thousands of satisfied users</p>
         </motion.div>
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -44,17 +44,17 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              className="bg-primary-foreground p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                 ))}
               </div>
-              <p className="text-gray-600 mb-4">{testimonial.content}</p>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">{testimonial.content}</p>
               <div>
-                <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                <p className="text-sm text-gray-500">{testimonial.role}</p>
+                <p className="font-semibold">{testimonial.name}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</p>
               </div>
             </motion.div>
           ))}

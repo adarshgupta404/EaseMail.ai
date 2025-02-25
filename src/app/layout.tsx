@@ -13,6 +13,7 @@ import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
 import Provider from "@/components/Provider";
 import NextTopLoader from "nextjs-toploader";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -26,12 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en"  suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ClerkProvider>
           <TRPCReactProvider>
             <Provider>
-              <NextTopLoader /> {children}
+              <ThemeProvider>
+                <NextTopLoader /> {children}
+              </ThemeProvider>
             </Provider>
           </TRPCReactProvider>
         </ClerkProvider>

@@ -33,8 +33,8 @@ export default function FAQ() {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <h2 className="text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
-          <p className="mt-4 text-lg text-gray-600">Everything you need to know about EasyMail.ai</p>
+          <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
+          <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">Everything you need to know about EasyMail.ai</p>
         </motion.div>
 
         <motion.div
