@@ -140,7 +140,15 @@ export const SparklesCore = ({
     mousePosition.x,
     mousePosition.y,
   ]);
-
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }, []);
+  
   return (
     <canvas
       ref={canvasRef}

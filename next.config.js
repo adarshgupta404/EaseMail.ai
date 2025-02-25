@@ -16,17 +16,6 @@ const config = {
     experimental: {
         reactRoot: "concurrent", // Helps with hydration in React 18+
     },
-    headers: async () => [
-        {
-          source: "/(.*)",
-          headers: [
-            {
-              key: "Content-Security-Policy",
-              value: "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:;",
-            },
-          ],
-        },
-      ],
 };
 
 export default config;
