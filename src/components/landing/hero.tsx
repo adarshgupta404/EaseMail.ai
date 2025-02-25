@@ -13,7 +13,7 @@ export default function Hero() {
     <div className="relative z-0 overflow-hidden">
       <div className="relative z-10 h-[calc(100dvh+308px)] min-h-[1050px] w-full">
         <SparklesCore
-          particleColor={theme === "dark" ?  "#FFFFFF":"#000000"}
+          particleColor={(theme === "dark" || theme === "system") ?  "#FFFFFF":"#000000"}
         />
         <div className="absolute top-0 z-20 h-full w-full">
           <div className="relative mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
