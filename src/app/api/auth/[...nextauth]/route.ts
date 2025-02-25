@@ -76,11 +76,13 @@ const handler = NextAuth({
           where: { email: data.email },
           update: {
             accessToken: account.access_token,
+            provider: 'Google',
           },
           create: {
             userId: userId,
             email: data.email,
             name: data.firstName,
+            provider: 'Google',
             accessToken: account.access_token!,
           },
         });

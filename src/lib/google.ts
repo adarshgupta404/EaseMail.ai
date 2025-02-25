@@ -114,9 +114,9 @@ export async function getAccounts() {
   if (!accounts) return [];
   return accounts;
 }
+
 export const getLatestEmailsById = async (accountId: string) => {
   const {userId} = await auth();
-  console.log(accountId, userId)
   if(!userId) return [];
   const accounts = await db.account.findUnique({
     where: { id:accountId, userId: userId }

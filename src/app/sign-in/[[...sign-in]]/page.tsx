@@ -5,7 +5,7 @@ import React from "react";
 export default function Page() {
   return (
     <div className="flex items-center h-dvh justify-center">
-      <SignIn />
+      <SignIn afterSignInUrl={"/mail"} />
     </div>
   )
 }
