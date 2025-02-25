@@ -5,14 +5,12 @@ import Pricing from "@/components/landing/pricing";
 import Testimonials from "@/components/landing/testimonials";
 import FAQ from "@/components/landing/faq";
 import CTA from "@/components/landing/cta";
-import { SparklesCore } from "@/components/landing/sparkles";
 
 export default function Home() {
   return (
     <main className="min-h-screen font-mono bg-background">
       <Navbar />
-      <Hero />
-     
+      <Hero />     
       <Features />
       <Pricing />
       <Testimonials />

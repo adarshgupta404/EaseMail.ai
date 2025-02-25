@@ -9,7 +9,7 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import "./globals.css";
+import "../styles/globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
 import Provider from "@/components/Provider";
 import NextTopLoader from "nextjs-toploader";
