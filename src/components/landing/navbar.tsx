@@ -33,7 +33,9 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Button variant="ghost">Log in</Button>
+            <Button variant="ghost">
+              <Link href={"/sign-in"}>Log in</Link>
+            </Button>
           </div>
         </div>
       </div>

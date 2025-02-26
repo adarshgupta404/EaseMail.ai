@@ -90,8 +90,8 @@ export async function getAccessToken() {
 
   if (!user) return null;
 
-  const account = await db.account.findUnique({
-    where: { email: user?.emailAddress },
+  const account = await db.account.findFirst({
+    where: { email: user?.emailAddress, userId: user.id },
     select: { accessToken: true },
   });
 
@@ -116,10 +116,10 @@ export async function getAccounts() {
 }
 
 export const getLatestEmailsById = async (accountId: string) => {
-  const {userId} = await auth();
-  if(!userId) return [];
+  const { userId } = await auth();
+  if (!userId) return [];
   const accounts = await db.account.findUnique({
-    where: { id:accountId, userId: userId }
+    where: { id: accountId, userId: userId },
   });
 
   if (!accounts) return [];

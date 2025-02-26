@@ -4,7 +4,7 @@ import { SignedIn, SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
 export default function page() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+    <main suppressHydrationWarning className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <Button>Hello World</Button>
       <SignedIn>
         <Button>

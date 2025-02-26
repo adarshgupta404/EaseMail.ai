@@ -4,7 +4,7 @@ import { db } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
 import axios from "axios";
 import { type NextRequest, NextResponse } from "next/server";
-
+import { waitUntil } from "@vercel/functions";
 export const GET = async (req: NextRequest) => {
   const { userId } = await auth();
   if (!userId)
@@ -26,29 +26,46 @@ export const GET = async (req: NextRequest) => {
       { status: 400 },
     );
   const accountDetails = await getAccountDetails(token.accessToken);
-  console.log(accountDetails);
-  
-  await db.account.upsert({
-    where: { email: accountDetails.email, userId: userId },
-    create: {
-      userId: userId,
-      email: accountDetails.email,
-      name: accountDetails.name,
-      provider: "Aurinko",
-      accessToken: token.accessToken,
-    },
-    update: {
-      accessToken: token.accessToken,
+  const dbAccount = await db.account.findFirst({
+    where: {
+      providerId: accountDetails.authUserId.toString(),
+      userId,
     },
   });
-  // waitUntil(
+  if (dbAccount) {
+    await db.account.update({
+      where: { id: dbAccount.id },
+      data: {
+        providerName: "Aurinko",
+        accessToken: token.accessToken.toString(),
+      },
+    });
+  } else {
+    await db.account.create({
+      data: {
+        providerId: accountDetails.authUserId.toString(),
+        userId: userId,
+        email: accountDetails.email,
+        name: accountDetails.name,
+        providerName: "Aurinko",
+        accessToken: token.accessToken.toString(),
+      },
+    });
+  }
 
-  //     axios.post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync`, { accountId: token.accountId.toString(), userId }).then((res) => {
-  //         console.log(res.data)
-  //     }).catch((err) => {
-  //         console.log(err.response.data)
-  //     })
-  // )
+  waitUntil(
+    axios
+      .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-aurinko`, {
+        accountId: accountDetails.authUserId.toString(),
+        userId,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      }),
+  );
 
   return NextResponse.redirect(new URL("/mail", req.url));
 };

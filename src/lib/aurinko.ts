@@ -59,6 +59,7 @@ export const getAccountDetails = async (accessToken: string) => {
       },
     });
     return response.data as {
+      authUserId: any;
       email: string;
       name: string;
     };

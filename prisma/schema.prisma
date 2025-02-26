@@ -20,11 +20,16 @@ model User {
 }
 
 model Account {
-    id          String @id @default(cuid())
-    userId      String
-    email       String @unique
-    provider    String
-    name        String
-    accessToken String
-    user        User   @relation(fields: [userId], references: [id])
+    id             String  @id @default(cuid())
+    providerId     String
+    userId         String
+    email          String  
+    providerName      String
+    name           String
+    accessToken    String  @unique
+    nextDeltaToken String?
+    user           User    @relation(fields: [userId], references: [id])
 }
+
+
+

@@ -1,6 +1,8 @@
-import { getGoogleAccountDetails } from "@/lib/google";
+import { getGoogleAccountDetails } from "@/lib/google-apis";
 import { db } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
+import { waitUntil } from "@vercel/functions";
+import axios from "axios";
 import NextAuth, { DefaultSession, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -47,7 +49,7 @@ const handler = NextAuth({
       return session;
     },
     async signIn({ account, profile }) {
-      if (account?.provider === "google" && profile?.email) {
+      if (account && account.provider === "google" && profile?.email) {
         const { userId } = await auth();
         if (!userId) {
           throw new Error("Login to clerk!");
@@ -70,22 +72,48 @@ const handler = NextAuth({
           console.log("User creation failed");
           return false;
         }
-
-        // Now use user.id instead of auth().userId
-        await db.account.upsert({
-          where: { email: data.email },
-          update: {
-            accessToken: account.access_token,
-            provider: 'Google',
-          },
-          create: {
-            userId: userId,
-            email: data.email,
-            name: data.firstName,
-            provider: 'Google',
-            accessToken: account.access_token!,
+        
+        const dbAccount = await db.account.findFirst({
+          where: {
+            providerId: account.providerAccountId,
+            userId,
           },
         });
+
+        if (dbAccount) {
+          await db.account.update({
+            where: { id: dbAccount.id },
+            data: {
+              providerName: "Google",
+              accessToken: account.access_token,
+            },
+          });
+        } else {
+          await db.account.create({
+            data: {
+              providerId: account.providerAccountId,
+              userId: userId,
+              email: data.email,
+              name: data.firstName,
+              providerName: "Google",
+              accessToken: account.access_token!,
+            },
+          });
+        }
+
+        waitUntil(
+          axios
+            .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
+              accountId: account.providerAccountId,
+              userId,
+            })
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((err) => {
+              console.log(err.response.data);
+            }),
+        );
         return true;
       }
       return false;

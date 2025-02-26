@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en"  suppressHydrationWarning>
-      <body suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning className=" font-mono ">
         <ClerkProvider>
           <TRPCReactProvider>
             <Provider>

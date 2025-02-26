@@ -10,7 +10,7 @@ import {
   getGoogleAccountDetails,
   getLatestEmails,
   getLatestEmailsById,
-} from "@/lib/google";
+} from "@/lib/google-apis";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
