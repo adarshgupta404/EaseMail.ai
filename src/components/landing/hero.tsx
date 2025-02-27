@@ -6,12 +6,17 @@ import { ArrowRight, Mail, Search, Sparkles } from "lucide-react";
 import { RoboAnimation } from "./robo-animation";
 import { SparklesCore } from "./sparkles";
 import { useTheme } from "next-themes";
+import { FloatingPaper } from "@/components/landing/floating-paper"
 
 export default function Hero() {
   const { theme } = useTheme();
   return (
     <div className="relative z-0 overflow-hidden">
       <div className="relative z-10 h-[calc(100dvh+308px)] min-h-[1050px] w-full">
+      <div className="absolute inset-0 overflow-hidden">
+        <FloatingPaper count={10} />
+      </div>
+
         <SparklesCore
           particleColor={
             theme === "dark" || theme === "system" ? "#FFFFFF" : "#000000"
