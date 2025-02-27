@@ -14,7 +14,7 @@ export const GET = async (req: NextRequest) => {
   const status = params.get("status");
   if (status !== "success")
     return NextResponse.json(
-      { error: "Account connection failed" },
+      { error: "Accoadunt connection failed" },
       { status: 400 },
     );
 
