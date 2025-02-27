@@ -10,7 +10,7 @@ class Account {
   private oauth2Client: any;
   private MAX_EMAILS = 1;
   private daysWithin = 3;
-  
+
   constructor(accessToken: string) {
     this.oauth2Client = new google.auth.OAuth2();
     this.oauth2Client.setCredentials({ access_token: accessToken });
@@ -94,17 +94,17 @@ class Account {
         return {
           id: email.data.id,
           threadId: email.data.threadId,
-          createdTime: email.data.internalDate ? new Date(parseInt(email.data.internalDate)) : null,
-          receivedAt: email.data.internalDate ? new Date(parseInt(email.data.internalDate)) : null,
+          createdTime: email.data.internalDate ? new Date(parseInt(email.data.internalDate)).toISOString() : null,
+          receivedAt: email.data.internalDate ? new Date(parseInt(email.data.internalDate)).toISOString() : null,
           lastModifiedTime: email.data.historyId,
-          sentAt: email.data.internalDate ? new Date(parseInt(getHeaderValue("Date"))) : null,
+          sentAt:new Date(getHeaderValue("Date")).toISOString(),
           internetMessageId: getHeaderValue("Message-ID"),
           subject: getHeaderValue("Subject"),
-          sysLabels: email.data.labelIds || [],
+          sysLabels: email.data.labelIds?.map((ele:string)=>{return ele.toLowerCase()}) || [],
           keywords: [],
           sysClassifications: [],
           sensitivity: "normal",
-          from: getHeaderValue("From").split(", ").map(parseEmailAddress),     
+          from: parseEmailAddress(getHeaderValue("From")),   
           to: getHeaderValue("To").split(", ").map(addr => ({ address: addr.trim() })),
           cc: getHeaderValue("Cc").split(", ").map(addr => ({ address: addr.trim() })),
           bcc: getHeaderValue("Bcc").split(", ").map(addr => ({ address: addr.trim() })),

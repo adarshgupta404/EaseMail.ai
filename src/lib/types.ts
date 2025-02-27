@@ -25,7 +25,7 @@ export interface EmailMessage {
     receivedAt: string;
     internetMessageId: string;
     subject: string;
-    sysLabels: Array<"junk" | "trash" | "sent" | "inbox" | "unread" | "flagged" | "important" | "draft">;
+    sysLabels: Array<"junk" | "trash" | "sent" | "inbox" | "unread" | "flagged" | "important" | "draft" | "category_promotion">;
     keywords: string[];
     sysClassifications: Array<"personal" | "social" | "promotions" | "updates" | "forums">;
     sensitivity: "normal" | "private" | "personal" | "confidential";

@@ -1,9 +1,7 @@
-
-
 "use client";
 
-import { useEffect, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   getAccessToken,
   getAccounts,
@@ -11,8 +9,9 @@ import {
   getLatestEmails,
   getLatestEmailsById,
 } from "@/lib/google-apis";
+import { signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
 export default function EmailsPage() {
   const [emails, setEmails] = useState<
@@ -67,46 +66,49 @@ export default function EmailsPage() {
   return (
     <div className="mx-auto max-w-2xl p-6">
       <h1 className="mb-4 text-2xl font-bold">Latest 5 Emails</h1>
-    <Button onClick={()=>signIn("google")}>Add Account +</Button>
+      <Button onClick={() => signIn("google")}>Add Account +</Button>
       {error && <p className="text-red-500">{error}</p>}
       {/* Render Accounts List */}
       <h2 className="mb-4 mt-6 text-xl font-bold">Connected Accounts</h2>
-      <ul className="space-y-4">
-        {accounts.map((account) => (
-          <li
-            onClick={async () => {
-              await handleClick(account.id);
-            }}
-            key={account.id}
-            className="cursor-pointer rounded-lg bg-blue-100 p-4 shadow"
-          >
-            <p>
-              <strong>Name:</strong> {account.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {account.email}
-            </p>
-          </li>
-        ))}
-      </ul>
+      <Card>
+        <ul className="space-y-4">
+          {accounts.map((account) => (
+            <li
+              onClick={async () => {
+                await handleClick(account.id);
+              }}
+              key={account.id}
+              className="cursor-pointer rounded-lg p-4 shadow"
+            >
+              <p>
+                <strong>Name:</strong> {account.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {account.email}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Card>
       <br />
       {loading && <p>Loading emails...</p>}
-      <ul className="space-y-4">
-        {emails.map((email, index) => (
-          <li key={index} className="rounded-lg bg-gray-100 p-4 shadow">
-            <p>
-              <strong>Subject:</strong> {email.subject}
-            </p>
-            <p>
-              <strong>From:</strong> {email.from}
-            </p>
-            <p>
-              <strong>Date:</strong> {email.date}
-            </p>
-          </li>
-        ))}
-      </ul>
+      <Card>
+        <ul className="space-y-4">
+          {emails.map((email, index) => (
+            <li key={index} className="rounded-lg p-4 shadow">
+              <p>
+                <strong>Subject:</strong> {email.subject}
+              </p>
+              <p>
+                <strong>From:</strong> {email.from}
+              </p>
+              <p>
+                <strong>Date:</strong> {email.date}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Card>
     </div>
   );
 }
-

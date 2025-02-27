@@ -14,6 +14,7 @@ import { Prisma } from "@prisma/client";
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
   console.log(`Syncing ${emails.length} emails to database`);
+  console.log(emails)
   const limit = pLimit(10); // Process up to 10 emails concurrently
 
   // const oramaClient = new OramaManager(accountId)
@@ -60,20 +61,23 @@ async function upsertEmail(
   index: number,
   accountId: string,
 ) {
-//   console.log(`Upserting email ${index + 1}`, JSON.stringify(email, null, 2));
+  //   console.log(`Upserting email ${index + 1}`, JSON.stringify(email, null, 2));
   try {
-    console.log(email)
+    
     // determine email label type
     let emailLabelType: "inbox" | "sent" | "draft" = "inbox";
+    const emailLabelArray = email.sysLabels;
     if (
-      email.sysLabels.includes("inbox") ||
-      email.sysLabels.includes("important")
+      emailLabelArray.includes("inbox") ||
+      emailLabelArray.includes("important")
     ) {
       emailLabelType = "inbox";
-    } else if (email.sysLabels.includes("sent")) {
+    } else if (emailLabelArray.includes("sent")) {
       emailLabelType = "sent";
-    } else if (email.sysLabels.includes("draft")) {
+    } else if (emailLabelArray.includes("draft")) {
       emailLabelType = "draft";
+    }else if(emailLabelArray.includes("category_promotion")){
+        return;
     }
 
     // 1. Upsert EmailAddress records

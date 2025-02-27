@@ -35,7 +35,6 @@ export const POST = async (req: NextRequest) => {
     const { deltaToken, emails } = response;
 
     console.log("Sync Emails: ", emails?.length || 0);
-    console.log(emails);
     // Uncomment when database saving is needed
     await syncEmailsToDatabase(emails, accountId);
 
