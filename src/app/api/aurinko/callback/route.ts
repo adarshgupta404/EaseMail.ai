@@ -57,30 +57,30 @@ export const GET = async (req: NextRequest) => {
       },
     });
   }
-  // axios
-  //   .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-aurinko`, {
-  //     accountId: accountDetails.authUserId.toString(),
-  //     userId,
-  //   })
-  //   .then((res) => {
-  //     console.log(res.data);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err.response.data);
-  //   });
-  waitUntil(
-    axios
-      .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-aurinko`, {
-        accountId: accountDetails.authUserId.toString(),
-        userId,
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      }),
-  );
+  axios
+    .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-aurinko`, {
+      accountId: accountDetails.authUserId.toString(),
+      userId,
+    })
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+    });
+  // waitUntil(
+  //   axios
+  //     .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-aurinko`, {
+  //       accountId: accountDetails.authUserId.toString(),
+  //       userId,
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response.data);
+  //     }),
+  // );
 
   return NextResponse.redirect(new URL("/mail", req.url));
 };
