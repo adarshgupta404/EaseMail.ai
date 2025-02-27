@@ -5,6 +5,10 @@ import { auth } from "@clerk/nextjs/server";
 import axios from "axios";
 import { type NextRequest, NextResponse } from "next/server";
 import { waitUntil } from "@vercel/functions";
+export const config = {
+  maxDuration: 5,
+};
+
 export const GET = async (req: NextRequest) => {
   const { userId } = await auth();
   if (!userId)

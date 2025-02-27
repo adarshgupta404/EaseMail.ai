@@ -1,8 +1,0 @@
-{
-    "functions": {
-      "api/initial-sync-aurinko": {
-        "maxDuration": 60
-      }
-    }
-  }
-  
