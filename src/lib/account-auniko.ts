@@ -12,7 +12,7 @@ const API_BASE_URL = "https://api.aurinko.io/v1";
 
 class Account {
   private token: string;
-  private MAX_EMAILS = 2;
+  private MAX_EMAILS = 1;
 
   constructor(token: string) {
     this.token = token;
@@ -61,7 +61,7 @@ class Account {
   async performInitialSync() {
     try {
       // Start the sync process
-      const daysWithin = 3;
+      const daysWithin = 1;
       let syncResponse = await this.startSync(daysWithin); // Sync emails from the last 7 days
 
       // Wait until the sync is ready

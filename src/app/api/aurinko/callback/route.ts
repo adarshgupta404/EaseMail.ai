@@ -6,9 +6,9 @@ import axios from "axios";
 import { type NextRequest, NextResponse } from "next/server";
 import { waitUntil } from "@vercel/functions";
 
-export const config = {
-  maxDuration: 59,
-};
+// export const config = {
+//   maxDuration: 59,
+// };
 
 export const GET = async (req: NextRequest) => {
   const { userId } = await auth();
@@ -57,7 +57,17 @@ export const GET = async (req: NextRequest) => {
       },
     });
   }
-
+  // axios
+  //   .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-aurinko`, {
+  //     accountId: accountDetails.authUserId.toString(),
+  //     userId,
+  //   })
+  //   .then((res) => {
+  //     console.log(res.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.response.data);
+  //   });
   waitUntil(
     axios
       .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-aurinko`, {

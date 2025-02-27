@@ -54,13 +54,14 @@ const handler = NextAuth({
         if (!userId) {
           throw new Error("Login to clerk!");
         }
-        const data = await getGoogleAccountDetails(
-          account.access_token as string,
-        );
-        if (!data) {
-          console.log("No data found");
-          return false;
-        }
+
+        // const data = await getGoogleAccountDetails(
+        //   account.access_token as string,
+        // );
+        // if (!data) {
+        //   console.log("No data found");
+        //   return false;
+        // }
 
         // Check if user already exists
         let user = await db.user.findUnique({
@@ -72,16 +73,16 @@ const handler = NextAuth({
           console.log("User creation failed");
           return false;
         }
-        
+
         const dbAccount = await db.account.findFirst({
           where: {
             providerId: account.providerAccountId,
             userId,
           },
         });
-
+        let acc;
         if (dbAccount) {
-          await db.account.update({
+          acc = await db.account.update({
             where: { id: dbAccount.id },
             data: {
               providerName: "Google",
@@ -89,31 +90,42 @@ const handler = NextAuth({
             },
           });
         } else {
-          await db.account.create({
+          acc = await db.account.create({
             data: {
               providerId: account.providerAccountId,
               userId: userId,
-              email: data.email,
-              name: data.firstName,
+              email: profile.email,
+              name: profile.name || "Unknown",
               providerName: "Google",
               accessToken: account.access_token!,
             },
           });
         }
 
-        waitUntil(
-          axios
-            .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
-              accountId: account.providerAccountId,
-              userId,
-            })
-            .then((res) => {
-              console.log(res.data);
-            })
-            .catch((err) => {
-              console.log(err.response.data);
-            }),
-        );
+        axios
+        .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
+          accountId: acc.id,
+          userId,
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        })
+        // waitUntil(
+        //   axios
+        //     .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
+        //       accountId: acc.id,
+        //       userId,
+        //     })
+        //     .then((res) => {
+        //       console.log(res.data);
+        //     })
+        //     .catch((err) => {
+        //       console.log(err.response.data);
+        //     }),
+        // );
         return true;
       }
       return false;
