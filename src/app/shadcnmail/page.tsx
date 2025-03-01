@@ -67,6 +67,7 @@ export default function EmailsPage() {
     <div className="mx-auto max-w-2xl p-6">
       <h1 className="mb-4 text-2xl font-bold">Latest 5 Emails</h1>
       <Button onClick={() => signIn("google")}>Add Account +</Button>
+      <Button onClick={() => signIn("zoho")}>Add Zoho Account +</Button>
       {error && <p className="text-red-500">{error}</p>}
       {/* Render Accounts List */}
       <h2 className="mb-4 mt-6 text-xl font-bold">Connected Accounts</h2>

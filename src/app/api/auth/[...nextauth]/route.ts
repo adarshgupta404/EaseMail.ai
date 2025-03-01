@@ -5,6 +5,8 @@ import { waitUntil } from "@vercel/functions";
 import axios from "axios";
 import NextAuth, { DefaultSession, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import AzureADProvider from "next-auth/providers/azure-ad";
+import ZohoProvider from "next-auth/providers/zoho";
 
 declare module "next-auth" {
   interface Session {
@@ -36,6 +38,36 @@ const handler = NextAuth({
         },
       },
     }),
+    AzureADProvider({
+      clientId: process.env.AZURE_AD_CLIENT_ID!,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+      tenantId: process.env.AZURE_AD_TENANT_ID!,
+      // authorization: {
+      //   params: {
+      //     scope: [
+      //       "openid",
+      //       "email",
+      //       "profile",
+      //       "offline_access",
+      //       "User.Read",
+      //       "Mail.Read",
+      //       "Mail.Read.Shared",
+      //       "Mail.ReadBasic",
+      //       "Mail.ReadBasic.Shared",
+      //       "Mail.ReadWrite",
+      //       "Mail.ReadWrite.Shared",
+      //       "Mail.Send",
+      //       "Mail.Send.Shared",
+      //     ].join(" "),
+      //   },
+      // },
+    }),
+    ZohoProvider({
+      clientId: process.env.ZOHO_CLIENT_ID,
+      clientSecret: process.env.ZOHO_CLIENT_SECRET,
+      authorization:
+      "https://accounts.zoho.com/oauth/v2/auth?scope=AaaServer.profile.Read,ZohoMail.accounts.READ,ZohoMail.messages.READ,ZohoMail.messages.CREATE,ZohoMail.messages.UPDATE,ZohoMail.messages.DELETE",
+    })
   ],
   callbacks: {
     async jwt({ token, account }) {
@@ -103,16 +135,16 @@ const handler = NextAuth({
         }
 
         axios
-        .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
-          accountId: acc.id,
-          userId,
-        })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err.response.data);
-        })
+          .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
+            accountId: acc.id,
+            userId,
+          })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          });
         // waitUntil(
         //   axios
         //     .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
@@ -127,6 +159,24 @@ const handler = NextAuth({
         //     }),
         // );
         return true;
+      }
+      if (account && account.provider === "azure-ad") {
+        console.log(account, profile)
+        fetch("https://graph.microsoft.com/v1.0/me/messages", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${account?.access_token}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => console.log("Data",data))
+          .catch((err) => console.error("Error here", err));
+        
+        return true;
+      }
+      if (account && account.provider === "zoho") {
+        console.log(account, profile)
       }
       return false;
     },
