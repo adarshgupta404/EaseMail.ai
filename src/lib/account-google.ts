@@ -8,7 +8,7 @@ import type {
 
 class Account {
   private oauth2Client: any;
-  private MAX_EMAILS = 1;
+  private MAX_EMAILS = 3;
   private daysWithin = 3;
 
   constructor(accessToken: string) {

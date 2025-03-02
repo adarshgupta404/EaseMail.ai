@@ -52,7 +52,7 @@ export const getLatestEmails = async (accessToken: string) => {
 export const getGoogleAccountDetails = async (accessToken: string) => {
   try {
     const response = await axios.get(
-      "https://people.googleapis.com/v1/people/me?personFields=emailAddresses,names",
+      "https://www.googleapis.com/oauth2/v3/userinfo",
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -61,12 +61,13 @@ export const getGoogleAccountDetails = async (accessToken: string) => {
     );
 
     const data = response.data;
+    // console.log(data);
 
     return {
-      email: data.emailAddresses?.[0]?.value || "",
-      firstName: data.names?.[0]?.givenName || "",
-      lastName: data.names?.[0]?.familyName || "",
-      profilePic: data.photos?.[0]?.url || "",
+      email: data.email || "",
+      providerId: data.sub || "",
+      name: data.name || "",
+      profilePic: data.picture || "",
     };
   } catch (error) {
     if (axios.isAxiosError(error)) {

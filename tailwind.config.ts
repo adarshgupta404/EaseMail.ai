@@ -9,8 +9,8 @@ export default {
       fontFamily: {
         sans: ["var(--font-geist-sans)", ...fontFamily.sans],
         merriweather: ["Merriweather", "serif"],
-		'roboto-slab': ['Roboto Slab', 'serif'],
-      },
+        roboto: ["Roboto Slab", "serif"],
+        helvetica: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

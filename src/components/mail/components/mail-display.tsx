@@ -1,4 +1,4 @@
-import { nextSaturday, format, addHours, addDays } from "date-fns";
+// import EmailEditor from "./email-editor";
 import {
   Archive,
   ArchiveX,
@@ -35,14 +35,33 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Mail } from "@/components/mail/data";
+import { api, type RouterOutputs } from "@/trpc/react";
+import { addDays, addHours, format, nextSaturday } from "date-fns";
 
-interface MailDisplayProps {
-  mail: Mail | null;
-}
+import { useAtom } from "jotai";
+// import { isSearchingAtom, searchValueAtom } from "./search-bar";
+// import SearchDisplay from "./search-display";
+import { useLocalStorage } from "usehooks-ts";
+import useThreads from "@/hooks/use-threads";
+import EmailDisplay from "./email-diplay";
+// import ReplyBox from "./reply-box";
 
-export function MailDisplay({ mail }: MailDisplayProps) {
+export default function ThreadDisplay() {
+  const { threadId, setThreadId, threads, isFetching } = useThreads();
+
   const today = new Date();
+  const thread = threads?.find((t) => t.id === threadId);
+  // const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
+
+  const [accountId] = useLocalStorage("accountId", "");
+  // const { data: foundThread } = api.mail.getThreadById.useQuery(
+  //   {
+  //     accountId: accountId,
+  //     threadId: threadId ?? "",
+  //   },
+  //   { enabled: !!!thread && !!threadId },
+  // );
+  // const thread = _thread ?? foundThread;
 
   return (
     <div className="flex h-full flex-col">
@@ -50,7 +69,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!thread}>
                 <Archive className="h-4 w-4" />
                 <span className="sr-only">Archive</span>
               </Button>
@@ -59,7 +78,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!thread}>
                 <ArchiveX className="h-4 w-4" />
                 <span className="sr-only">Move to junk</span>
               </Button>
@@ -68,7 +87,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!thread}>
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Move to trash</span>
               </Button>
@@ -80,7 +99,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <Popover>
               <PopoverTrigger asChild>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" disabled={!mail}>
+                  <Button variant="ghost" size="icon" disabled={!thread}>
                     <Clock className="h-4 w-4" />
                     <span className="sr-only">Snooze</span>
                   </Button>
@@ -139,7 +158,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <div className="ml-auto flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!thread}>
                 <Reply className="h-4 w-4" />
                 <span className="sr-only">Reply</span>
               </Button>
@@ -148,7 +167,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!thread}>
                 <ReplyAll className="h-4 w-4" />
                 <span className="sr-only">Reply all</span>
               </Button>
@@ -157,7 +176,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!thread}>
                 <Forward className="h-4 w-4" />
                 <span className="sr-only">Forward</span>
               </Button>
@@ -168,7 +187,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <Separator orientation="vertical" className="mx-2 h-6" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" disabled={!mail}>
+            <Button variant="ghost" size="icon" disabled={!thread}>
               <MoreVertical className="h-4 w-4" />
               <span className="sr-only">More</span>
             </Button>
@@ -182,70 +201,63 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         </DropdownMenu>
       </div>
       <Separator />
-      {mail ? (
-        <div className="flex flex-1 flex-col">
-          <div className="flex items-start p-4">
-            <div className="flex items-start gap-4 text-sm">
-              <Avatar>
-                <AvatarImage alt={mail.name} />
-                <AvatarFallback>
-                  {mail.name
-                    .split(" ")
-                    .map((chunk) => chunk[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <div className="font-semibold">{mail.name}</div>
-                <div className="line-clamp-1 text-xs">{mail.subject}</div>
-                <div className="line-clamp-1 text-xs">
-                  <span className="font-medium">Reply-To:</span> {mail.email}
+      {/* {isSearching ? (
+        <SearchDisplay />
+      ) : ( */}
+        <>
+          {thread ? (
+            <div className="flex flex-1 flex-col overflow-scroll hide-scrollbar">
+              <div className="flex items-start p-4">
+                <div className="flex items-start gap-4 text-sm">
+                  <Avatar>
+                    <AvatarImage alt={"lol"} />
+                    <AvatarFallback>
+                      {thread?.emails[0]?.from?.name
+                        ?.split(" ")
+                        .map((chunk: any) => chunk[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid gap-1">
+                    <div className="font-semibold">
+                      {thread.emails[0]?.from?.name}
+                    </div>
+                    <div className="line-clamp-1 text-xs">
+                      {thread.emails[0]?.subject}
+                    </div>
+                    <div className="line-clamp-1 text-xs">
+                      <span className="font-medium">Reply-To:</span>{" "}
+                      {thread.emails[0]?.from?.address}
+                    </div>
+                  </div>
+                </div>
+                {thread.emails[0]?.sentAt && (
+                  <div className="ml-auto text-xs text-muted-foreground">
+                    {format(new Date(thread.emails[0].sentAt), "PPpp")}
+                  </div>
+                )}
+              </div>
+              <Separator />
+              <div className="flex max-h-[calc(500px)] hide-scrollbar flex-col overflow-scroll">
+                <div className="flex flex-col gap-4 p-6">
+                  {thread.emails.map((email: any) => {
+                    return <EmailDisplay key={email.id} email={email} />;
+                  })}
                 </div>
               </div>
+              <div className="flex-1"></div>
+              <Separator className="mt-auto" />
+              {/* <ReplyBox /> */}
             </div>
-            {mail.date && (
-              <div className="ml-auto text-xs text-muted-foreground">
-                {format(new Date(mail.date), "PPpp")}
+          ) : (
+            <>
+              <div className="p-8 text-center text-muted-foreground">
+                No Email selected
               </div>
-            )}
-          </div>
-          <Separator />
-          <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
-            {mail.text}
-          </div>
-          <Separator className="mt-auto" />
-          <div className="p-4">
-            <form>
-              <div className="grid gap-4">
-                <Textarea
-                  className="p-4"
-                  placeholder={`Reply ${mail.name}...`}
-                />
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="mute"
-                    className="flex items-center gap-2 text-xs font-normal"
-                  >
-                    <Switch id="mute" aria-label="Mute thread" /> Mute this
-                    thread
-                  </Label>
-                  <Button
-                    onClick={(e) => e.preventDefault()}
-                    size="sm"
-                    className="ml-auto"
-                  >
-                    Send
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      ) : (
-        <div className="p-8 text-center text-muted-foreground">
-          No message selected
-        </div>
-      )}
+            </>
+          )}
+        </>
+      {/* )} */}
     </div>
   );
 }
