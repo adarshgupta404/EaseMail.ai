@@ -55,7 +55,13 @@ export default function Testimonials() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <MagicCard className="relative overflow-hidden rounded-xl transition-transform translate-y-0 hover:-translate-y-3 duration-300 ease-in-out">
+              <MagicCard
+                gradientSize={300}
+                gradientFrom={"#9E7AFF"}
+                gradientTo={"#FE8BBB"}
+                gradientOpacity={0.15}
+                className="relative translate-y-0 overflow-hidden rounded-xl transition-transform duration-300 ease-in-out hover:-translate-y-3"
+              >
                 <div className="overflow-hidden bg-muted/30 p-6 shadow-sm transition-shadow duration-300 hover:shadow-lg">
                   <div className="mb-4 flex gap-1">
                     {[...Array(5)].map((_, i) => (
