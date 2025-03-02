@@ -54,7 +54,7 @@ export default function ThreadDisplay() {
   // const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
 
   const [accountId] = useLocalStorage("accountId", "");
-  // const { data: foundThread } = api.mail.getThreadById.useQuery(
+  // const { data: foundThread } = api.account.getThreadById.useQuery(
   //   {
   //     accountId: accountId,
   //     threadId: threadId ?? "",

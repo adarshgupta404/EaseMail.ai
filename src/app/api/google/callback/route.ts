@@ -10,7 +10,7 @@ export const GET = async (req: NextRequest) => {
   const { userId } = await auth();
   if (!userId)
     return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
-console.log(userId)
+  console.log(userId);
   const params = req.nextUrl.searchParams;
 
   const code = params.get("code");
@@ -18,22 +18,23 @@ console.log(userId)
   if (!token)
     return NextResponse.json(
       { error: "Failed to fetch token" },
-      { status: 400 }
+      { status: 400 },
     );
   const accountDetails = await getGoogleAccountDetails(token.access_token);
-  if(!accountDetails) {
-    console.log("No account details")
+  if (!accountDetails) {
+    console.log("No account details");
     return;
   }
-  console.log(accountDetails)
+  console.log(accountDetails);
   const dbAccount = await db.account.findFirst({
     where: {
       providerId: accountDetails.providerId.toString(),
       userId,
     },
   });
+  let account;
   if (dbAccount) {
-    await db.account.update({
+    account = await db.account.update({
       where: { id: dbAccount.id },
       data: {
         providerName: "Google",
@@ -41,7 +42,7 @@ console.log(userId)
       },
     });
   } else {
-    await db.account.create({
+    account = await db.account.create({
       data: {
         providerId: accountDetails.providerId.toString(),
         userId: userId,
@@ -54,7 +55,7 @@ console.log(userId)
   }
   axios
     .post(`${process.env.NEXT_PUBLIC_URL}/api/initial-sync-google`, {
-      accountId: dbAccount?.id,
+      accountId: account.id,
       userId,
     })
     .then((res) => {

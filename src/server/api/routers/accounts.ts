@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { db } from "@/server/db";
 import { Prisma } from "@prisma/client";
+import { threadId } from "worker_threads";
 
 export const authorizeAccountAccess = async (
   accountId: string,
@@ -71,6 +72,8 @@ export const accountRouter = createTRPCRouter({
       } else if (input.tab === "sent") {
         filter.sentStatus = true;
       }
+      filter.accountId = input.accountId;
+      
       return await ctx.db.thread.count({
         where: filter,
       });
@@ -99,6 +102,8 @@ export const accountRouter = createTRPCRouter({
         filter.sentStatus = true;
       }
 
+      filter.accountId = input.accountId;
+
       filter.done = {
         equals: input.done,
       };
@@ -124,6 +129,43 @@ export const accountRouter = createTRPCRouter({
         take: 10,
         orderBy: {
           lastMessageDate: "desc",
+        },
+      });
+    }),
+
+  getThreadById: privateProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+        threadId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const account = await authorizeAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+
+      return await ctx.db.thread.findUnique({
+        where: {
+          id: input.threadId,
+        },
+        include: {
+          emails: {
+            orderBy: {
+              sentAt: "asc",
+            },
+            select: {
+              from: true,
+              body: true,
+              subject: true,
+              bodySnippet: true,
+              emailLabel: true,
+              sysLabels: true,
+              id: true,
+              sentAt: true,
+            },
+          },
         },
       });
     }),
