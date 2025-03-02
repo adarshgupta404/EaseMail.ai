@@ -72,6 +72,7 @@ export const accountRouter = createTRPCRouter({
       } else if (input.tab === "sent") {
         filter.sentStatus = true;
       }
+      
       filter.accountId = input.accountId;
       
       return await ctx.db.thread.count({
