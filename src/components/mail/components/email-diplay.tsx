@@ -33,7 +33,7 @@ const EmailDisplay = ({ email }: Props) => {
       className={cn(
         "w-fit cursor-pointer rounded-md border p-4 transition-all hover:translate-x-2",
         {
-          "border-l-4 border-l-gray-900": isMe,
+          "border-l-4 border-l-gray-900 dark:border-l-secondary-foreground": isMe,
         },
       )}
       ref={letterRef}
@@ -62,8 +62,8 @@ const EmailDisplay = ({ email }: Props) => {
       </div>
       <div className="h-4"></div>
       <Letter
-        className="rounded-md bg-white text-black"
-        html={email?.body ?? ""}
+        className="rounded-md bg-white text-black p-4"
+        html={email?.body || email?.bodySnippet || ""}
       />
     </div>
   );

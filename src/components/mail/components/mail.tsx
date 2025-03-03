@@ -34,31 +34,32 @@ import { useLocalStorage } from "usehooks-ts";
 import FontSelector from "./font-selector";
 import { fonts } from "./font";
 import dynamic from "next/dynamic";
+import useThreads from "@/hooks/use-threads";
+import SearchBar from "./search-bar";
 
 const Nav = dynamic(() => import("@/components/mail/components/nav"), {
   ssr: false,
 });
 
 interface MailProps {
-  mails: Mail[];
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
 }
 
 export default function MailPage({
-  mails,
   defaultLayout = [20, 32, 48],
   defaultCollapsed = false,
   navCollapsedSize,
 }: MailProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [mail] = useMail();
   const [tab] = useLocalStorage("easemail-tab", "inbox");
   const [storedFont, setStoredFont] = useLocalStorage("selectedFont", fonts[0]);
   const [selectedFont, setSelectedFont] = React.useState<
     null | (typeof fonts)[0]
   >(null);
+
+
   React.useEffect(() => {
     if (storedFont) setSelectedFont(storedFont);
   }, [storedFont]);
@@ -176,11 +177,12 @@ export default function MailPage({
                   </div>
                 </form>
               </div>
+              {/* <SearchBar/> */}
               <TabsContent value="all" className="m-0">
-                <MailList items={mails} />
+                <MailList />
               </TabsContent>
               <TabsContent value="unread" className="m-0">
-                <MailList items={mails.filter((item) => !item.read)} />
+                <MailList />
               </TabsContent>
             </Tabs>
           </ResizablePanel>

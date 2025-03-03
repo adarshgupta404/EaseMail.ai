@@ -1,9 +1,6 @@
 import { db } from "@/server/db";
 import { Prisma } from "@prisma/client";
 import pLimit from "p-limit";
-import { getEmbeddings } from "./embeddings";
-import { OramaManager } from "./orama";
-import { turndown } from "./turndown";
 import type { EmailAddress, EmailAttachment, EmailMessage } from "./types";
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
@@ -63,9 +60,9 @@ async function upsertEmail(
     // determine email label type
     let emailLabelType: "inbox" | "sent" | "draft" = "inbox";
     const emailLabelArray = email.sysLabels;
+    console.log(emailLabelArray)
     if (
-      emailLabelArray.includes("inbox") ||
-      emailLabelArray.includes("important")
+      emailLabelArray.includes("inbox")
     ) {
       emailLabelType = "inbox";
     } else if (emailLabelArray.includes("sent")) {

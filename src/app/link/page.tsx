@@ -1,8 +1,10 @@
+"use client"
 import LinkAccountButton from "@/components/LinkAccountButton";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignOutButton } from "@clerk/nextjs";
+import { SignedIn, SignOutButton, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 export default function page() {
+  const { signOut } = useClerk();
   return (
     <main
       suppressHydrationWarning
@@ -16,6 +18,9 @@ export default function page() {
       <LinkAccountButton />
       <Button variant={"destructive"}>
         <SignOutButton />
+      </Button>
+      <Button onClick={() => signOut({ redirectUrl: "/sign-in" })}>
+        Sign Out Function
       </Button>
     </main>
   );

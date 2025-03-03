@@ -12,11 +12,9 @@ import { format, parseISO } from "date-fns";
 import { useAtom } from "jotai";
 import { motion } from "framer-motion";
 import { useAutoAnimate } from "@formkit/auto-animate/react"
-interface MailListProps {
-  items: Mail[];
-}
 
-export function MailList({ items }: MailListProps) {
+
+export function MailList() {
   const { threads, account, threadId, setThreadId } = useThreads();
   const [parent] = useAutoAnimate(/* optional config */);
 
@@ -44,7 +42,7 @@ export function MailList({ items }: MailListProps) {
               <button
                 key={thread.id}
                 className={cn(
-                  "relative flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
+                  "relative flex flex-col group items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
                   threadId === thread.id && "bg-muted",
                 )}
                 onClick={() => {
@@ -67,9 +65,9 @@ export function MailList({ items }: MailListProps) {
                       <div className="font-semibold">
                         {thread.emails.at(-1)?.from.name}
                       </div>
-                      {/* {!item.read && (
-                        <span className="flex h-2 w-2 rounded-full bg-blue-600" />
-                      )} */}
+                      {thread.emails.at(0)?.sysLabels.includes("unread") && (
+                        <span className="flex h-1.5 flex-shrink-0 w-1.5 my-auto rounded-full bg-blue-600" />
+                      )}
                     </div>
                     <div
                       className={cn(
@@ -119,6 +117,7 @@ export function MailList({ items }: MailListProps) {
                       return (
                         <Badge
                           key={label}
+                          className={cn("group-hover:bg-secondary-foreground group-hover:text-secondary", threadId === thread.id && "text-secondary bg-secondary-foreground")}
                           variant={getBadgeVariantFromLabel(label)}
                         >
                           {labelMap[label] || label}

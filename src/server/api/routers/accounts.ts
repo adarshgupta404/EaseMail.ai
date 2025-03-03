@@ -22,20 +22,6 @@ export const authorizeAccountAccess = async (
   if (!account) throw new Error("Account not found!");
   return account;
 };
-const inboxFilter = (accountId: string): Prisma.ThreadWhereInput => ({
-  accountId,
-  inboxStatus: true,
-});
-
-const sentFilter = (accountId: string): Prisma.ThreadWhereInput => ({
-  accountId,
-  sentStatus: true,
-});
-
-const draftFilter = (accountId: string): Prisma.ThreadWhereInput => ({
-  accountId,
-  draftStatus: true,
-});
 
 export const accountRouter = createTRPCRouter({
   getAccounts: privateProcedure.query(async ({ ctx }) => {
@@ -67,14 +53,14 @@ export const accountRouter = createTRPCRouter({
       let filter: Prisma.ThreadWhereInput = {};
       if (input.tab === "inbox") {
         filter.inboxStatus = true;
-      } else if (input.tab === "drafts") {
+      } else if (input.tab === "draft") {
         filter.draftStatus = true;
       } else if (input.tab === "sent") {
         filter.sentStatus = true;
       }
-      
+
       filter.accountId = input.accountId;
-      
+
       return await ctx.db.thread.count({
         where: filter,
       });
@@ -97,7 +83,7 @@ export const accountRouter = createTRPCRouter({
       let filter: Prisma.ThreadWhereInput = {};
       if (input.tab === "inbox") {
         filter.inboxStatus = true;
-      } else if (input.tab === "drafts") {
+      } else if (input.tab === "draft") {
         filter.draftStatus = true;
       } else if (input.tab === "sent") {
         filter.sentStatus = true;
@@ -169,5 +155,83 @@ export const accountRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  setDone: privateProcedure
+    .input(
+      z.object({
+        threadId: z.string().optional(),
+        threadIds: z.array(z.string()).optional(),
+        accountId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!input.threadId && !input.threadIds)
+        throw new Error("No threadId or threadIds provided");
+      const account = await authorizeAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      if (!account) throw new Error("Invalid token");
+      if (input.threadId) {
+        await ctx.db.thread.update({
+          where: {
+            id: input.threadId,
+          },
+          data: {
+            done: true,
+          },
+        });
+      }
+      if (input.threadIds) {
+        await ctx.db.thread.updateMany({
+          where: {
+            id: {
+              in: input.threadIds,
+            },
+          },
+          data: {
+            done: true,
+          },
+        });
+      }
+    }),
+
+  setUndone: privateProcedure
+    .input(
+      z.object({
+        threadId: z.string().optional(),
+        threadIds: z.array(z.string()).optional(),
+        accountId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const account = await authorizeAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+      if (!account) throw new Error("Invalid token");
+      if (input.threadId) {
+        await ctx.db.thread.update({
+          where: {
+            id: input.threadId,
+          },
+          data: {
+            done: false,
+          },
+        });
+      }
+      if (input.threadIds) {
+        await ctx.db.thread.updateMany({
+          where: {
+            id: {
+              in: input.threadIds,
+            },
+          },
+          data: {
+            done: false,
+          },
+        });
+      }
     }),
 });

@@ -1,11 +1,16 @@
-"use client"
-import { SignIn } from "@clerk/nextjs";
+"use client";
+import { SignIn, useAuth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 import React from "react";
 
 export default function Page() {
+  const { userId } = useAuth();
+  if (userId) {
+    redirect("/mail");
+  }
   return (
-    <div className="flex items-center h-dvh justify-center">
+    <div className="flex h-dvh items-center justify-center">
       <SignIn afterSignInUrl={"/mail"} />
     </div>
-  )
+  );
 }
