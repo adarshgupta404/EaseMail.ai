@@ -39,29 +39,29 @@ import { api, type RouterOutputs } from "@/trpc/react";
 import { addDays, addHours, format, nextSaturday } from "date-fns";
 
 import { useAtom } from "jotai";
-// import { isSearchingAtom, searchValueAtom } from "./search-bar";
+import { isSearchingAtom, searchValueAtom } from "./search-bar";
 // import SearchDisplay from "./search-display";
 import { useLocalStorage } from "usehooks-ts";
 import useThreads from "@/hooks/use-threads";
 import EmailDisplay from "./email-diplay";
-// import ReplyBox from "./reply-box";
+import ReplyBox from "./reply-box";
 
 export default function ThreadDisplay() {
   const { threadId, setThreadId, threads, isFetching } = useThreads();
 
   const today = new Date();
-  const thread = threads?.find((t) => t.id === threadId);
-  // const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
+  const _thread = threads?.find((t) => t.id === threadId);
+  const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
 
   const [accountId] = useLocalStorage("accountId", "");
-  // const { data: foundThread } = api.account.getThreadById.useQuery(
-  //   {
-  //     accountId: accountId,
-  //     threadId: threadId ?? "",
-  //   },
-  //   { enabled: !!!thread && !!threadId },
-  // );
-  // const thread = _thread ?? foundThread;
+  const { data: foundThread }: any = api.account.getThreadById.useQuery(
+    {
+      accountId: accountId,
+      threadId: threadId ?? "",
+    },
+    { enabled: !!!_thread && !!threadId },
+  );
+  const thread = _thread ?? foundThread;
 
   return (
     <div className="flex h-full flex-col">
@@ -204,59 +204,59 @@ export default function ThreadDisplay() {
       {/* {isSearching ? (
         <SearchDisplay />
       ) : ( */}
-        <>
-          {thread ? (
-            <div className="flex flex-1 flex-col overflow-scroll hide-scrollbar">
-              <div className="flex items-start p-4">
-                <div className="flex items-start gap-4 text-sm">
-                  <Avatar>
-                    <AvatarImage alt={"lol"} />
-                    <AvatarFallback>
-                      {thread?.emails[0]?.from?.name
-                        ?.split(" ")
-                        .map((chunk: any) => chunk[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <div className="font-semibold">
-                      {thread.emails[0]?.from?.name}
-                    </div>
-                    <div className="line-clamp-1 text-xs">
-                      {thread.emails[0]?.subject}
-                    </div>
-                    <div className="line-clamp-1 text-xs">
-                      <span className="font-medium">Reply-To:</span>{" "}
-                      {thread.emails[0]?.from?.address}
-                    </div>
+      <>
+        {thread ? (
+          <div className="hide-scrollbar flex flex-1 flex-col overflow-scroll">
+            <div className="flex items-start p-4">
+              <div className="flex items-start gap-4 text-sm">
+                <Avatar>
+                  <AvatarImage alt={"lol"} />
+                  <AvatarFallback>
+                    {thread?.emails[0]?.from?.name
+                      ?.split(" ")
+                      .map((chunk: any) => chunk[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="font-semibold">
+                    {thread.emails[0]?.from?.name}
+                  </div>
+                  <div className="line-clamp-1 text-xs">
+                    {thread.emails[0]?.subject}
+                  </div>
+                  <div className="line-clamp-1 text-xs">
+                    <span className="font-medium">Reply-To:</span>{" "}
+                    {thread.emails[0]?.from?.address}
                   </div>
                 </div>
-                {thread.emails[0]?.sentAt && (
-                  <div className="ml-auto text-xs text-muted-foreground">
-                    {format(new Date(thread.emails[0].sentAt), "PPpp")}
-                  </div>
-                )}
               </div>
-              <Separator />
-              <div className="flex max-h-[calc(500px)] hide-scrollbar flex-col overflow-scroll">
-                <div className="flex flex-col gap-4 p-6">
-                  {thread.emails.map((email: any) => {
-                    return <EmailDisplay key={email.id} email={email} />;
-                  })}
+              {thread.emails[0]?.sentAt && (
+                <div className="ml-auto text-xs text-muted-foreground">
+                  {format(new Date(thread.emails[0].sentAt), "PPpp")}
                 </div>
-              </div>
-              <div className="flex-1"></div>
-              <Separator className="mt-auto" />
-              {/* <ReplyBox /> */}
+              )}
             </div>
-          ) : (
-            <>
-              <div className="p-8 text-center text-muted-foreground">
-                No Email selected
+            <Separator />
+            <div className="max-h-[calc(100dvh-400px)] overflow-scroll flex flex-col hide-scrollbar">
+              <div className="flex flex-col gap-4 p-6">
+                {thread.emails.map((email: any) => {
+                  return <EmailDisplay key={email.id} email={email} />;
+                })}
               </div>
-            </>
-          )}
-        </>
+            </div>
+            <div className="flex-1"></div>
+            <Separator className="mt-auto" />
+            <ReplyBox />
+          </div>
+        ) : (
+          <>
+            <div className="p-8 text-center text-muted-foreground">
+              No Email selected
+            </div>
+          </>
+        )}
+      </>
       {/* )} */}
     </div>
   );
