@@ -85,11 +85,11 @@ const DraggableUserMenu = ({ user }: { user: any }) => {
     >
       <div
         ref={menuRef}
-        className="flex items-center gap-2 rounded-full border border-border bg-background p-1 shadow-lg transition-all duration-300"
+        className="flex bg-muted items-center gap-2 rounded-full border  border-secondary-foreground p-1 shadow-lg transition-all duration-300"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="bg-mutted relative my-2 ml-2 h-10 w-10 rounded-full">
+        <div className="bg-secondary-foreground relative my-2 ml-2 h-10 w-10 rounded-full">
           <img
             src={user?.imageUrl}
             alt="User"
