@@ -83,6 +83,9 @@ export const accountRouter = createTRPCRouter({
         ctx.auth.userId,
       );
 
+      // const acc = new Account(account.accessToken)
+      // acc.syncEmails().catch(console.error)
+
       let filter: Prisma.ThreadWhereInput = {};
       if (input.tab === "inbox") {
         filter.inboxStatus = true;
@@ -297,7 +300,7 @@ export const accountRouter = createTRPCRouter({
         ctx.auth.userId,
       );
       const account = new Account(acc.accessToken);
-      console.log("sendmail", input);
+      // console.log("sendmail", input);
       const data = await account.sendEmail({
         body: input.body,
         subject: input.subject,
@@ -395,6 +398,6 @@ export const accountRouter = createTRPCRouter({
       );
       if (!account) throw new Error("Invalid token");
       const acc = new Account(account.accessToken);
-      acc.performInitialSync();
+      acc.syncEmails();
     }),
 });

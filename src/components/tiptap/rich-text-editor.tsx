@@ -144,7 +144,7 @@ export function RichTextEditorDemo({
       </div>
       <EditorContent
         editor={editor}
-        className=" w-full h-full min-w-full cursor-text"
+        className=" w-full h-full cursor-text"
       />
       
     </div>
