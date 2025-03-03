@@ -31,7 +31,7 @@ type EmailEditorProps = {
   subject: string;
   setSubject: (subject: string) => void;
   to: string[];
-  handleSend: (value: string) => void;
+  handleSend: (value: string) => any;
   isSending: boolean;
 
   onToChange: (values: { label: string; value: string }[]) => void;
@@ -76,7 +76,7 @@ const EmailEditor = ({
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
-        "Meta-a-i": () => {
+        "Mod-q": () => {
           aiGenerate(this.editor.getText());
           return true;
         },
@@ -129,12 +129,12 @@ const EmailEditor = ({
   const [value, setValue] = React.useState("");
 
   return (
-    <div className="hide-scrollbar max-h-[300px] overflow-y-auto">
+    <div className="hide-scrollbar relative h-full w-full max-h-[300px] overflow-y-auto">
       {/* <div className="flex border-b p-4 py-2">
         {editor && <TipTapMenuBar editor={editor} />}
       </div> */}
 
-      <div className="prose w-full px-4">
+      <div className="prose h-full w-full px-4">
         <RichTextEditorDemo
           className="w-full rounded-xl"
           value={value}
@@ -159,17 +159,19 @@ const EmailEditor = ({
           placeholder="Write your email here..."
         /> */}
       </div>
-      <Separator />
-      <div className="sticky bottom-0 bg-background">
-        <div className="flex items-center justify-between px-4 py-3">
+
+      <div className="fixed bottom-0 w-full bg-background min-w-[450px]">
+        <Separator />
+        <div className="flex items-center gap-[70px] px-4 py-3">
           <span className="text-sm">
             Tip: Press{" "}
             <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-              Cmd + J
+              Cmd + Q
             </kbd>{" "}
             for AI autocomplete
           </span>
           <Button
+          className=""
             onClick={async () => {
               editor?.commands.clearContent();
               await handleSend(value);

@@ -3,13 +3,13 @@ import React from "react";
 // import EmailEditor from './email-editor'
 import useThreads from "@/hooks/use-threads";
 import { api, type RouterOutputs } from "@/trpc/react";
-import { toast } from "sonner";
 import { useLocalStorage, useReadLocalStorage } from "usehooks-ts";
 import EmailEditor from "./email-editor";
+import { toast } from "sonner";
 
 const ReplyBox = () => {
   const { threadId } = useThreads();
-  const [accountId] = useLocalStorage("accountId",'');
+  const [accountId] = useLocalStorage("accountId", "");
   const { data: replyDetails } = api.account.getReplyDetails.useQuery({
     accountId: accountId,
     threadId: threadId || "",
@@ -24,7 +24,7 @@ const ReplyBoxComponent = ({
 }: {
   replyDetails: NonNullable<RouterOutputs["account"]["getReplyDetails"]>;
 }) => {
-  const [accountId] = useLocalStorage("accountId",'');
+  const [accountId] = useLocalStorage("accountId", "");
   const { threadId } = useThreads();
   const [subject, setSubject] = React.useState(
     replyDetails.subject.startsWith("Re:")
@@ -94,6 +94,10 @@ const ReplyBoxComponent = ({
         onSuccess: () => {
           toast.success("Email sent");
           // editor?.commands.clearContent()
+        },
+        onError: () => {
+          toast.error("Please login again with same account!");
+          console.log("error")
         },
       },
     );

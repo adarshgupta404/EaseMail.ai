@@ -298,7 +298,7 @@ export const accountRouter = createTRPCRouter({
       );
       const account = new Account(acc.accessToken);
       console.log("sendmail", input);
-      await account.sendMail({
+      const data = await account.sendEmail({
         body: input.body,
         subject: input.subject,
         threadId: input.threadId,
@@ -309,6 +309,7 @@ export const accountRouter = createTRPCRouter({
         from: input.from,
         inReplyTo: input.inReplyTo,
       });
+      return data;
     }),
 
   getReplyDetails: privateProcedure

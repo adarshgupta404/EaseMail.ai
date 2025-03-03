@@ -15,6 +15,7 @@ import { useLocalStorage } from "usehooks-ts";
 import { ChevronDown, Plus, Users } from "lucide-react";
 import { signIn, signOut } from "next-auth/react";
 import { getGoogleAuthorizationUrl } from "@/lib/google";
+import { RiRobot2Line } from "react-icons/ri";
 
 interface AccountSwitcherProps {
   isCollapsed: boolean;
@@ -23,12 +24,12 @@ interface AccountSwitcherProps {
 export function AccountSwitcher({ isCollapsed }: AccountSwitcherProps) {
   const { data, isLoading } = api.account.getAccounts.useQuery();
   const [accountId, setAccountId] = useLocalStorage("accountId", "");
-  if (isLoading)
+  if (isLoading && !isCollapsed)
     return (
       <div className="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground [&>span]:line-clamp-1">
         <div className="flex items-center gap-2">
           <span className="h-6 w-6 animate-pulse rounded-full bg-muted"></span>
-          <span className="h-4 w-28 animate-pulse rounded-full bg-muted"></span>
+          <span className="h-4 w-28 animate-pulse rounded-full bg-muted pl-4"></span>
         </div>
         <ChevronDown className="h-4 w-4 opacity-50" />
       </div>
@@ -51,7 +52,7 @@ export function AccountSwitcher({ isCollapsed }: AccountSwitcherProps) {
           ) ? (
             <FaGoogle />
           ) : (
-            <Fa500Px />
+            <RiRobot2Line />
           )}
 
           <span className={cn("ml-2", isCollapsed && "hidden")}>

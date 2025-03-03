@@ -11,7 +11,8 @@ const useThreads = () => {
   const [accountId] = useLocalStorage("accountId", "");
   const [tab] = useLocalStorage("easemail-tab", "inbox");
   const [done] = useLocalStorage("easemail-done", false);
-  const [threadId, setThreadId] = useAtom(threadIdAtom);
+  // const [threadId, setThreadId] = useAtom(threadIdAtom);
+  const [threadId, setThreadId] = useLocalStorage("threadId", "");
   const queryKey = getQueryKey(api.account.getThreads, { accountId, tab, done }, 'query')
   const {
     data: threads,

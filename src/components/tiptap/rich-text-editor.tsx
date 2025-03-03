@@ -101,7 +101,7 @@ export function RichTextEditorDemo({
   suggestions,
 }: EmailEditorProps) {
   return (
-    <>
+    <div className="h-full ">
       <EditorToolbar editor={editor} />
       <FloatingToolbar editor={editor} />
       <TipTapFloatingMenu editor={editor} />
@@ -124,7 +124,7 @@ export function RichTextEditorDemo({
             />
             <Input
               id="subject"
-              className="w-full"
+              className="w-full h-10 py-3"
               placeholder="Subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
@@ -144,8 +144,9 @@ export function RichTextEditorDemo({
       </div>
       <EditorContent
         editor={editor}
-        className="min-h-[600px] w-full min-w-full cursor-text"
+        className=" w-full h-full min-w-full cursor-text"
       />
-    </>
+      
+    </div>
   );
 }

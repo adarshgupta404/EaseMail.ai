@@ -238,7 +238,7 @@ export default function ThreadDisplay() {
               )}
             </div>
             <Separator />
-            <div className="max-h-[calc(100dvh-400px)] overflow-scroll flex flex-col hide-scrollbar">
+            <div className="max-h-[calc(100dvh-500px)] overflow-scroll flex flex-col hide-scrollbar">
               <div className="flex flex-col gap-4 p-6">
                 {thread.emails.map((email: any) => {
                   return <EmailDisplay key={email.id} email={email} />;

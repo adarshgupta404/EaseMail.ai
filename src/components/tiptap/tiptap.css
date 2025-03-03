@@ -37,6 +37,7 @@
   --editor-spacing-2: 0.5rem;
   --editor-spacing-3: 0.75rem;
   --editor-spacing-4: 1rem;
+  --editor-spacing-5: 1.08rem;
   --editor-spacing-6: 1.5rem;
   --editor-spacing-8: 2rem;
   --editor-spacing-12: 3rem;
@@ -95,15 +96,16 @@
   caret-color: var(--editor-text-default);
   outline: none;
   /* padding: var(--editor-spacing-16) var(--editor-spacing-8); */
-  padding: 0 var(--editor-spacing-6);
+  padding: 0 var(--editor-spacing-5);
+  padding-bottom: 50px;
   margin: 0 auto;
-  max-width: 90ch;
+  /* max-width: 90ch; */
   font-family: var(--editor-font-sans);
   position: relative;
   /* background-color: var(--editor-bg-default); */
   color: var(--editor-text-default);
   transition: all var(--editor-transition-normal);
-  min-height: 100vh;
+  /* min-height: 100vh; */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

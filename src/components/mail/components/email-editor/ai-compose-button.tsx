@@ -18,6 +18,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import useThreads from "@/hooks/use-threads";
 import { turndown } from "@/lib/turndown";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Props = {
   onGenerate: (value: string) => void;
@@ -52,36 +58,38 @@ const AIComposeButton = (props: Props) => {
     }
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="">
-        <Bot className="size-5" />
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>AI Compose</DialogTitle>
-          <DialogDescription>
-            AI will compose an email based on the context of your previous
-            emails.
-          </DialogDescription>
-          <div className="h-2"></div>
-          <Textarea
-            placeholder="What would you like to compose?"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-          />
-          <div className="h-2"></div>
-          <Button
-            onClick={() => {
-              aiGenerate(prompt);
-              setOpen(false);
-              setPrompt("");
-            }}
-          >
-            Generate
-          </Button>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+    <TooltipProvider>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger className="rounded-lg  bg-secondary p-[6px]">
+          <Bot className="size-5" />
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>AI Compose</DialogTitle>
+            <DialogDescription>
+              AI will compose an email based on the context of your previous
+              emails.
+            </DialogDescription>
+            <div className="h-2"></div>
+            <Textarea
+              placeholder="What would you like to compose?"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+            />
+            <div className="h-2"></div>
+            <Button
+              onClick={() => {
+                aiGenerate(prompt);
+                setOpen(false);
+                setPrompt("");
+              }}
+            >
+              Generate
+            </Button>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </TooltipProvider>
   );
 };
 
