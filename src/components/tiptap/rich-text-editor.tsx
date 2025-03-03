@@ -134,7 +134,7 @@ export function RichTextEditorDemo({
         <div className="flex items-center gap-2">
           <div className="cursor-pointer" onClick={() => setExpanded((e:any) => !e)}>
             <span className="font-medium text-green-600">Draft </span>
-            <span>to {to.join(", ")}</span>
+            <span>to {to?.join(", ")}</span>
           </div>
           <AIComposeButton
             isComposing={defaultToolbarExpand}
