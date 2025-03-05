@@ -385,13 +385,11 @@ export const accountRouter = createTRPCRouter({
       }
     }),
 
-  syncEmails: privateProcedure
-    .input(
+  syncEmails: privateProcedure.input(
       z.object({
         accountId: z.string(),
       }),
-    )
-    .mutation(async ({ ctx, input }) => {
+    ).mutation(async ({ ctx, input }) => {
       const account = await authorizeAccountAccess(
         input.accountId,
         ctx.auth.userId,
