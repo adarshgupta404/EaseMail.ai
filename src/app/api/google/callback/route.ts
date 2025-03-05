@@ -24,6 +24,7 @@ export const GET = async (req: NextRequest) => {
       { error: "Failed to fetch token" },
       { status: 400 },
     );
+  // console.log(token);
   const accountDetails = await getGoogleAccountDetails(token.access_token);
   if (!accountDetails) {
     console.log("No account details");
@@ -43,6 +44,7 @@ export const GET = async (req: NextRequest) => {
       data: {
         providerName: "Google",
         accessToken: token.access_token.toString(),
+        refreshToken: token.refresh_token.toString(),
       },
     });
   } else {
@@ -53,6 +55,7 @@ export const GET = async (req: NextRequest) => {
         email: accountDetails.email,
         name: accountDetails.name,
         providerName: "Google",
+        refreshToken: token.refresh_token.toString(),
         accessToken: token.access_token.toString(),
       },
     });

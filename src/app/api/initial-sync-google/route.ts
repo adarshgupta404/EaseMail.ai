@@ -7,7 +7,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   try {
-    console.log("Start Syncing....")
+    console.log("Start Syncing....");
     const body = await req.json();
     const { accountId, userId } = body;
     if (!accountId || !userId) {
@@ -39,14 +39,16 @@ export const POST = async (req: NextRequest) => {
     // Uncomment when database saving is needed
     await syncEmailsToDatabase(emails, accountId);
 
-    await db.account.update({
-      where: {
-        id: dbAccount.id,
-      },
-      data: {
-        nextDeltaToken: deltaToken,
-      },
-    });
+    if (deltaToken) {
+      await db.account.update({
+        where: {
+          id: dbAccount.id,
+        },
+        data: {
+          nextDeltaToken: deltaToken,
+        },
+      });
+    }
 
     console.log("Sync complete, deltaToken:", deltaToken);
 

@@ -75,6 +75,7 @@
         "googleapis": "^144.0.0",
         "input-otp": "^1.4.2",
         "jotai": "^2.12.1",
+        "jwt-decode": "^4.0.0",
         "kbar": "^0.1.0-beta.45",
         "lucide-react": "^0.475.0",
         "motion": "^12.4.7",
@@ -1118,6 +1119,8 @@
     "jwa": ["jwa@2.0.0", "", { "dependencies": { "buffer-equal-constant-time": "1.0.1", "ecdsa-sig-formatter": "1.0.11", "safe-buffer": "^5.0.1" } }, "sha512-jrZ2Qx916EA+fq9cEAeCROWPTfCwi1IVHqT2tapuqLEVVDKFDENFw1oL+MwrTvH6msKxsd1YTDVw6uKEcsrLEA=="],
 
     "jws": ["jws@4.0.0", "", { "dependencies": { "jwa": "^2.0.0", "safe-buffer": "^5.0.1" } }, "sha512-KDncfTmOZoOMTFG4mBlG0qUIOlc03fmzH+ru6RgYVZhPkyiy/92Owlt/8UEN+a4TXR1FQetfIpJE8ApdvdVxTg=="],
+
+    "jwt-decode": ["jwt-decode@4.0.0", "", {}, "sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA=="],
 
     "kbar": ["kbar@0.1.0-beta.45", "", { "dependencies": { "@radix-ui/react-portal": "^1.0.1", "fast-equals": "^2.0.3", "fuse.js": "^6.6.2", "react-virtual": "^2.8.2", "tiny-invariant": "^1.2.0" }, "peerDependencies": { "react": "^16.0.0 || ^17.0.0 || ^18.0.0", "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0" } }, "sha512-kXvjthqPLoWZXlxLJPrFKioskNdQv1O3Ukg5mqq2ExK3Ix1qvYT3W/ACDRIv/e/CHxPWZoTriB4oFbQ6UCSX5g=="],
 

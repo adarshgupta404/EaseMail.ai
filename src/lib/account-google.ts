@@ -1,13 +1,8 @@
-import { google } from "googleapis";
-import type {
-  EmailAddress,
-  EmailMessage,
-  SyncResponse,
-  SyncUpdatedResponse,
-} from "@/lib/types";
-import { syncEmailsToDatabase } from "./sync-to-db";
+import type { EmailAddress, EmailMessage } from "@/lib/types";
 import { db } from "@/server/db";
 import axios from "axios";
+import { google } from "googleapis";
+import { syncEmailsToDatabase } from "./sync-to-db";
 
 class Account {
   private oauth2Client: any;
@@ -30,11 +25,12 @@ class Account {
     const response = await gmail.users.messages.list({
       userId: "me",
       q: query, // Filter emails by date
+      maxResults: 10,
     });
-
+    console.log("next page token:", response.data);
     return {
       ready: true,
-      syncUpdatedToken: response.data.nextPageToken || "", // Simulating delta token
+      syncUpdatedToken: response.data.nextPageToken, // Simulating delta token
     };
   }
 
@@ -108,7 +104,7 @@ class Account {
             ? new Date(parseInt(email.data.internalDate)).toISOString()
             : null,
           lastModifiedTime: email.data.historyId,
-          sentAt: new Date(getHeaderValue("Date")).toISOString(),
+          sentAt: new Date(getHeaderValue("Date"))?.toISOString(),
           internetMessageId: getHeaderValue("Message-ID"),
           subject: getHeaderValue("Subject"),
           sysLabels:
@@ -174,11 +170,11 @@ class Account {
     //     };
     //   })
     // );
-
+    // console.log("Token Info", response.data)
     return {
       records: emails,
-      nextDeltaToken: response.data.nextPageToken || "",
-      nextPageToken: response.data.nextPageToken || "",
+      nextDeltaToken: response.data.nextPageToken,
+      nextPageToken: response.data.nextPageToken,
     };
   }
 
@@ -195,7 +191,7 @@ class Account {
       let updatedResponse = await this.getUpdatedEmails({
         deltaToken: syncResponse.syncUpdatedToken,
       });
-
+console.log("PIS storedDeltaToken", storedDeltaToken)
       let allEmails: EmailMessage[] = updatedResponse.records || [];
 
       while (
@@ -205,7 +201,8 @@ class Account {
         updatedResponse = await this.getUpdatedEmails({
           pageToken: updatedResponse.nextPageToken,
         });
-        allEmails = allEmails.concat(updatedResponse.records || []);
+        console.log("DeltaToken", updatedResponse.nextDeltaToken);
+        allEmails = allEmails.concat(updatedResponse.records);
 
         if (updatedResponse.nextDeltaToken) {
           storedDeltaToken = updatedResponse.nextDeltaToken;
@@ -225,11 +222,27 @@ class Account {
   }
 
   async syncEmails() {
-    const account = await db.account.findUnique({
+    let account = await db.account.findUnique({
       where: {
         accessToken: this.accessToken,
       },
     });
+    const expired = await this.isAccessTokenExpired();
+    if (account && expired) {
+      // Check if account exists and token is expired
+      console.log("Expired: ", expired);
+      const result = await this.refreshAccessToken(account.refreshToken);
+      console.log("Access Token Refreshed!");
+      await db.account.update({
+        where: {
+          id: account.id,
+        },
+        data: {
+          accessToken: result.toString(),
+        },
+      });
+    }
+
     if (!account) throw new Error("Invalid token");
     if (!account.nextDeltaToken) throw new Error("No delta token");
     let response = await this.getUpdatedEmails({
@@ -240,7 +253,7 @@ class Account {
     if (response.nextDeltaToken) {
       storedDeltaToken = response.nextDeltaToken;
     }
-    while (response.nextPageToken) {
+    while (response.nextPageToken && allEmails.length < this.MAX_EMAILS) {
       response = await this.getUpdatedEmails({
         pageToken: response.nextPageToken,
       });
@@ -250,6 +263,9 @@ class Account {
       }
     }
 
+    // Trim to max 10 emails
+    allEmails = allEmails.slice(0, this.MAX_EMAILS);
+    console.log("DeltaToken", storedDeltaToken);
     if (!response) throw new Error("Failed to sync emails");
 
     try {
@@ -259,14 +275,16 @@ class Account {
     }
 
     // console.log('syncEmails', response)
-    await db.account.update({
-      where: {
-        id: account.id,
-      },
-      data: {
-        nextDeltaToken: storedDeltaToken,
-      },
-    });
+    if (storedDeltaToken) {
+      await db.account.update({
+        where: {
+          id: account.id,
+        },
+        data: {
+          nextDeltaToken: storedDeltaToken,
+        },
+      });
+    }
   }
 
   async sendEmail({
@@ -331,6 +349,61 @@ class Account {
         console.error("Error sending email:", error);
       }
       throw error;
+    }
+  }
+  async isAccessTokenExpired() {
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${this.accessToken}`,
+      );
+
+      if (!response.ok) {
+        console.error("Invalid or expired token.");
+        return true;
+      }
+
+      const data = await response.json();
+
+      if (!data.expires_in) {
+        console.error("No expiration info found.");
+        return true;
+      }
+
+      return data.expires_in <= 0; // If expires_in is 0 or negative, token is expired
+    } catch (error) {
+      console.error("Error checking token status:", error);
+      return true;
+    }
+  }
+
+  async refreshAccessToken(refreshToken: string) {
+    const tokenEndpoint = "https://oauth2.googleapis.com/token";
+    const params = new URLSearchParams();
+    params.append("client_id", process.env.GOOGLE_CLIENT_ID!);
+    params.append("client_secret", process.env.GOOGLE_CLIENT_SECRET!);
+    params.append("refresh_token", refreshToken);
+    params.append("grant_type", "refresh_token");
+
+    try {
+      const response = await fetch(tokenEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params.toString(),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Error refreshing access token: ${response.statusText}`,
+        );
+      }
+
+      const data = await response.json();
+      return data.access_token;
+    } catch (error) {
+      console.error("Failed to refresh access token:", error);
+      return null;
     }
   }
 }

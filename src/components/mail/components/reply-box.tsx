@@ -50,6 +50,7 @@ const ReplyBoxComponent = ({
   );
 
   const sendEmail = api.account.sendEmail.useMutation();
+  const syncEmails = api.account.syncEmails.useMutation();
   React.useEffect(() => {
     if (!replyDetails || !threadId) return;
 
@@ -93,6 +94,7 @@ const ReplyBoxComponent = ({
       {
         onSuccess: () => {
           toast.success("Email sent");
+          syncEmails.mutate({accountId})
           // editor?.commands.clearContent()
         },
         onError: () => {

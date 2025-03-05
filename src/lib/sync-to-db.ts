@@ -41,7 +41,7 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
       }
     }
 
-    await Promise.all([, syncToDB()]);
+    await Promise.all([syncToDB()]);
     // await Promise.all([syncToOrama(), syncToDB()]);
 
     // await oramaClient.saveIndex();

@@ -14,6 +14,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import Provider from "@/components/Provider";
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import KBar from "@/components/mail/components/kbar";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -41,7 +42,8 @@ export default function RootLayout({
           <TRPCReactProvider>
             <Provider>
               <ThemeProvider>
-                <NextTopLoader /> {children}
+                <NextTopLoader />
+                <KBar>{children}</KBar>
               </ThemeProvider>
             </Provider>
           </TRPCReactProvider>

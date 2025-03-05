@@ -6,16 +6,16 @@ import { ArrowRight, Mail, Search, Sparkles } from "lucide-react";
 import { RoboAnimation } from "./robo-animation";
 import { SparklesCore } from "./sparkles";
 import { useTheme } from "next-themes";
-import { FloatingPaper } from "@/components/landing/floating-paper"
+import { FloatingPaper } from "@/components/landing/floating-paper";
 
 export default function Hero() {
   const { theme } = useTheme();
   return (
     <div className="relative z-0 overflow-hidden">
       <div className="relative z-10 h-[calc(100dvh+308px)] min-h-[1050px] w-full">
-      <div className="absolute inset-0 overflow-hidden">
-        <FloatingPaper count={10} />
-      </div>
+        <div className="absolute inset-0 overflow-hidden">
+          <FloatingPaper count={10} />
+        </div>
 
         <SparklesCore
           particleColor={
@@ -71,11 +71,16 @@ export default function Hero() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="h-full w-full max-w-4xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-3xl" />
                 </div>
-                <div className="relative">
-                  <div className="mx-auto h-[400px] w-full max-w-4xl overflow-hidden rounded-2xl border bg-card/70 shadow-2xl backdrop-blur">
+                <div className="group relative">
+                  <div className="mx-auto h-[400px] w-full max-w-4xl transform overflow-hidden rounded-2xl border bg-card/70 shadow-lg backdrop-blur transition-all duration-300 hover:shadow-2xl group-hover:scale-105">
                     <img
+                      suppressHydrationWarning
                       className="h-full w-full object-cover object-left md:object-center"
-                      src="https://omnileadzdev.s3.amazonaws.com/NjVlMDhhYjUwMDNlZWY4NmNlNWQwYmY5/1740503395731_blob"
+                      src={
+                        theme === "light"
+                          ? "https://res.cloudinary.com/dpgncpd4i/image/upload/v1741198784/Screenshot_2025-03-05_234917_boze5j.png"
+                          : "https://res.cloudinary.com/dpgncpd4i/image/upload/v1741198784/Screenshot_2025-03-05_234841_kvjqzs.png"
+                      }
                     />
                   </div>
                 </div>

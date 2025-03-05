@@ -21,12 +21,10 @@ export default function Mail({
   navCollapsedSize,
 }: MailProps) {
   return (
-    <KBar>
       <MailPage
         defaultLayout={defaultLayout}
         defaultCollapsed={defaultCollapsed}
         navCollapsedSize={4}
       />
-    </KBar>
   );
 }

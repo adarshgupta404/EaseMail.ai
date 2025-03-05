@@ -36,6 +36,7 @@ import { fonts } from "./font";
 import dynamic from "next/dynamic";
 import useThreads from "@/hooks/use-threads";
 import SearchBar from "./search-bar";
+import { api, type RouterOutputs } from "@/trpc/react";
 
 const Nav = dynamic(() => import("@/components/mail/components/nav"), {
   ssr: false,
@@ -58,7 +59,22 @@ export default function MailPage({
   const [selectedFont, setSelectedFont] = React.useState<
     null | (typeof fonts)[0]
   >(null);
+  const [accountId] = useLocalStorage("accountId", "");
 
+  const { mutate, isPending } = api.account.syncEmails.useMutation();
+  
+  React.useEffect(() => {
+    if (!accountId) return; // Prevent execution if accountId is empty
+  
+    const interval = setInterval(() => {
+      if (!isPending) { // Avoid duplicate calls while a request is still ongoing
+        mutate({ accountId });
+      }
+    }, 480000);
+  
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [accountId, isPending]); // Re-run only when accountId or isLoading changes
+  
 
   React.useEffect(() => {
     if (storedFont) setSelectedFont(storedFont);

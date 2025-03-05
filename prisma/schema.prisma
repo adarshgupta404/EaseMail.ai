@@ -38,10 +38,10 @@ model Account {
     providerName   String
     name           String
     accessToken    String         @unique
+    refreshToken   String         @unique
     nextDeltaToken String?
     emailAddresses EmailAddress[]
     user           User           @relation(fields: [userId], references: [id])
-
     Thread Thread[]
 }
 
