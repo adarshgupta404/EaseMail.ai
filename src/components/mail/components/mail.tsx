@@ -70,7 +70,7 @@ export default function MailPage({
       if (!isPending) { // Avoid duplicate calls while a request is still ongoing
         mutate({ accountId });
       }
-    }, 480000);
+    }, 80000);
   
     return () => clearInterval(interval); // Cleanup on unmount
   }, [accountId, isPending]); // Re-run only when accountId or isLoading changes

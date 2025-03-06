@@ -8,7 +8,7 @@ import CTA from "@/components/landing/cta";
 
 export default function Home() {
   return (
-    <main className="min-h-screen font-mono bg-background">
+    <main className="max-h-dvh w-dvh overflow-x-hidden font-mono bg-background">
       <Navbar />
       <Hero />     
       <Features />
