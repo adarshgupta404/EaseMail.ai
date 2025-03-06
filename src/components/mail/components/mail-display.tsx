@@ -65,7 +65,7 @@ export default function ThreadDisplay() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center p-2">
+      {/* <div className="flex items-center p-2">
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -200,7 +200,7 @@ export default function ThreadDisplay() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Separator />
+      <Separator /> */}
       {/* {isSearching ? (
         <SearchDisplay />
       ) : ( */}
@@ -240,7 +240,7 @@ export default function ThreadDisplay() {
             <Separator />
             <div className="max-h-[calc(100dvh-460px)] overflow-scroll flex flex-col hide-scrollbar">
               <div className="flex flex-col gap-4 p-6">
-                {thread.emails.map((email: any) => {
+                {thread.emails.reverse().map((email: any) => {
                   return <EmailDisplay key={email.id} email={email} />;
                 })}
               </div>
