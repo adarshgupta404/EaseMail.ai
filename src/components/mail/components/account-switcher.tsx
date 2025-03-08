@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { useLocalStorage } from "usehooks-ts";
 import { ChevronDown, Plus, Users } from "lucide-react";
-import { signIn, signOut } from "next-auth/react";
 import { getGoogleAuthorizationUrl } from "@/lib/google";
 import { RiRobot2Line } from "react-icons/ri";
 
